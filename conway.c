@@ -4,7 +4,13 @@
 #include <unistd.h>
 #include <time.h>
 
-int main (void){
+int main (int argc, char *argv[]){
+    if(argc != 3){
+        printf("Program needs 2 arguments.\nFirst is refresh rate in ms.\nSecond is %% change to fill cell.\nExample: ./conway 100 30\n");
+        return 1;
+    }
+    int sleepms = atoi(argv[1]) * 1000;
+    int pct = atoi(argv[2]);
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     int WIDTH = w.ws_col;
@@ -13,11 +19,11 @@ int main (void){
     int (*worldTmp)[WIDTH] = calloc(HEIGHT, sizeof(int[WIDTH]));
     srand(time(0));
 
-    // initialize random world 50 %
+    // initialize random world
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j) {
-            int n = rand() % 2;
-            if(n == 1) {
+            int n = rand() % 100;
+            if(n < pct) {
                 world[i][j] = 1;
             }
             // border value
@@ -38,8 +44,8 @@ int main (void){
                     printf("%c", '#');
                 }
             }
-            printf("%c", '\n');
         }
+        printf("%c", '\n');
         // change worldTmp state
         for (int i = 1; i < HEIGHT-1; ++i) {
             for (int j = 1; j < WIDTH-1; ++j) {
@@ -73,10 +79,8 @@ int main (void){
                 world[i][j] = worldTmp[i][j];
             }
         }
-        usleep(100000);
+        usleep(sleepms);
     }while(1);
-    free(world);
-    free(worldTmp);
     return 0;
 }
 
