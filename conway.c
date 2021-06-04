@@ -18,7 +18,6 @@ int main (int argc, char *argv[]){
     int (*world)[WIDTH] = calloc(HEIGHT, sizeof(int[WIDTH]));
     int (*worldTmp)[WIDTH] = calloc(HEIGHT, sizeof(int[WIDTH]));
     srand(time(0));
-
     // initialize random world
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j) {
